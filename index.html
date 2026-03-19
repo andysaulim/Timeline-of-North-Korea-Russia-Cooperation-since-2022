@@ -656,6 +656,36 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .kn-source { font-family:var(--fm); font-size:.55rem; color:rgba(255,255,255,.28); margin:.4rem 0 0; letter-spacing:.04em }
 .kn-source a { color:rgba(255,255,255,.28); text-decoration:none; transition:color .15s }
 .kn-source a:hover { color:var(--gold2) }
+
+@media (max-width: 720px) {
+
+  /* Float nav: show Top + Bottom, hide year jump buttons */
+  .float-nav .fn-btn:not(.top-btn):not(.bottom-btn) { display: none }
+  .fn-group-label { display: none }
+
+  /* Bar chart: hide on mobile — too small to be useful */
+  .mast-chart { display: none }
+
+  /* Source attribution below key numbers */
+  .kn-source { font-size: .5rem; margin-top: .3rem }
+
+  /* Social dropdown: align to left edge on narrow screens */
+  #social-dropdown { left: 1.1rem !important; max-width: calc(100vw - 2.2rem) }
+
+  /* Sidebar category buttons in mobile filter panel */
+  .ctrl-row-2 .chips .chip { font-size: .62rem; padding: 4px 9px }
+
+  /* Mast-actions wrap tightly */
+  .mast-actions { margin-top: .7rem }
+
+  /* Key numbers source under chart area */
+  .kn-source { margin-top: .4rem }
+
+  /* Prevent horizontal scroll */
+  body { overflow-x: hidden }
+  .mast-in { overflow-x: hidden }
+}
+
 </style>
 </head>
 <body>
@@ -872,7 +902,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 </div></div>
 
 <div class="float-nav no-print">
-  <button class="fn-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">
+  <button class="fn-btn bottom-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">
     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg> Bottom
   </button>
   <button class="fn-btn top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -1358,7 +1388,8 @@ window.scrollToYr = function(id){
     e.stopPropagation();
     var rect = btn.getBoundingClientRect();
     drop.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
-    drop.style.left = rect.left + 'px';
+    var leftPos = window.innerWidth < 480 ? 16 : rect.left;
+    drop.style.left = leftPos + 'px';
     drop.style.display = drop.style.display === 'none' ? 'block' : 'none';
   });
 
