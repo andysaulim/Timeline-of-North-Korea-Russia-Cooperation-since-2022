@@ -351,21 +351,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 }
 
 /* Category chips: full color at rest, brighter on active */
-.chip.mil  { background:var(--c-mil);  border-color:var(--c-mil);  color:#fff }
-.chip.int  { background:var(--c-int);  border-color:var(--c-int);  color:#fff }
-.chip.dip  { background:var(--c-dip);  border-color:var(--c-dip);  color:#fff }
-.chip.eco  { background:var(--c-eco);  border-color:var(--c-eco);  color:#fff }
-.chip.tech { background:var(--c-tech); border-color:var(--c-tech); color:#fff }
-.chip.mil:hover  { background:#9a2820; border-color:#9a2820 }
-.chip.int:hover  { background:#154f74; border-color:#154f74 }
-.chip.dip:hover  { background:#652873; border-color:#652873 }
-.chip.eco:hover  { background:#2e620c; border-color:#2e620c }
-.chip.tech:hover { background:#96510a; border-color:#96510a }
-.chip.mil.on  { background:#9a2820; border-color:#9a2820; color:#fff !important; box-shadow:0 0 0 2px rgba(184,50,40,.35) }
-.chip.int.on  { background:#154f74; border-color:#154f74; color:#fff !important; box-shadow:0 0 0 2px rgba(26,95,138,.35) }
-.chip.dip.on  { background:#652873; border-color:#652873; color:#fff !important; box-shadow:0 0 0 2px rgba(122,47,138,.35) }
-.chip.eco.on  { background:#2e620c; border-color:#2e620c; color:#fff !important; box-shadow:0 0 0 2px rgba(58,122,16,.35) }
-.chip.tech.on { background:#96510a; border-color:#96510a; color:#fff !important; box-shadow:0 0 0 2px rgba(184,98,0,.35) }
 
 
 
@@ -644,6 +629,33 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   .mast-actions { flex-wrap: wrap }
 }
 
+
+/* Multi-select year chips: "All" greys out when years selected */
+#yr-chips .chip.all.on-passive { opacity: .45 }
+/* Category chip: bold border when active to show multi-select clearly */
+
+
+/* Category chips — tinted at rest, saturated when selected */
+.chip.mil  { background:rgba(184,50,40,.1);  border-color:var(--c-mil);  color:var(--c-mil) }
+.chip.int  { background:rgba(26,95,138,.1);  border-color:var(--c-int);  color:var(--c-int) }
+.chip.dip  { background:rgba(122,47,138,.1); border-color:var(--c-dip);  color:var(--c-dip) }
+.chip.eco  { background:rgba(58,122,16,.1);  border-color:var(--c-eco);  color:var(--c-eco) }
+.chip.tech { background:rgba(184,98,0,.1);   border-color:var(--c-tech); color:var(--c-tech) }
+.chip.mil:hover  { background:rgba(184,50,40,.2) }
+.chip.int:hover  { background:rgba(26,95,138,.2) }
+.chip.dip:hover  { background:rgba(122,47,138,.2) }
+.chip.eco:hover  { background:rgba(58,122,16,.2) }
+.chip.tech:hover { background:rgba(184,98,0,.2) }
+.chip.mil.on  { background:var(--c-mil);  border-color:var(--c-mil);  color:#fff !important; outline:2px solid rgba(184,50,40,.5);  outline-offset:2px }
+.chip.int.on  { background:var(--c-int);  border-color:var(--c-int);  color:#fff !important; outline:2px solid rgba(26,95,138,.5);  outline-offset:2px }
+.chip.dip.on  { background:var(--c-dip);  border-color:var(--c-dip);  color:#fff !important; outline:2px solid rgba(122,47,138,.5); outline-offset:2px }
+.chip.eco.on  { background:var(--c-eco);  border-color:var(--c-eco);  color:#fff !important; outline:2px solid rgba(58,122,16,.5);  outline-offset:2px }
+.chip.tech.on { background:var(--c-tech); border-color:var(--c-tech); color:#fff !important; outline:2px solid rgba(184,98,0,.5);   outline-offset:2px }
+
+
+.kn-source { font-family:var(--fm); font-size:.55rem; color:rgba(255,255,255,.28); margin:.4rem 0 0; letter-spacing:.04em }
+.kn-source a { color:rgba(255,255,255,.28); text-decoration:none; transition:color .15s }
+.kn-source a:hover { color:var(--gold2) }
 </style>
 </head>
 <body>
@@ -703,6 +715,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
         <div class="kn-lbl">Estimated NK earnings from Russia</div>
       </div>
     </div>
+    <p class="kn-source">Source: <a href="https://youtu.be/JJu6_Gysw7s" target="_blank" rel="noopener">CSIS Beyond Parallel</a></p>
     <div class="mast-chart"><canvas id="esc-chart"></canvas></div>
   </div>
 </header>
@@ -765,7 +778,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
         <button class="chip fig" data-fig="Choe Son-hui">Choe Son-hui</button>
       </div>
       <div class="sep"></div>
-      <button class="chip lm-chip" id="landmarks-btn">&#9733; Landmarks</button>
     </div>
 
   </div>
@@ -885,7 +897,7 @@ var YEAR_CAPS   = {"2022":"CSIS satellite imagery: Russia–North Korea rail tra
 var ML = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
 var MS = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var CATS = {military:'Military',diplomatic:'Diplomatic',intelligence:'Intelligence & Monitoring',economic:'Economic & Trade',technology:'Technology & Science'};
-var filtered = EVENTS.slice(), activeYr='all', activeCat=null, activeQ='', activeView='cards', activeFig=null, landmarksOnly=false;
+var filtered = EVENTS.slice(), activeYrs=new Set(), activeCats=new Set(), activeQ='', activeView='cards', activeFig=null, landmarksOnly=false;
 
 /* ── SIMPLE YEAR TIMELINE ── */
 function buildTimeline(){
@@ -966,7 +978,19 @@ function buildChart(){
         {label:'Technology',  data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 2, 2, 2, 5, 1, 1, 1, 0],backgroundColor:'rgba(12,112,128,.85)',stack:'s'},
       ]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+        plugins:{legend:{display:false},tooltip:{
+          mode:'index',intersect:false,
+          backgroundColor:'rgba(2,11,31,.95)',
+          titleColor:'#ffc726',
+          titleFont:{family:'IBM Plex Mono',size:10,weight:'600'},
+          bodyColor:'rgba(255,255,255,.85)',
+          bodyFont:{family:'Source Sans 3',size:11},
+          borderColor:'rgba(255,199,38,.3)',
+          borderWidth:1,
+          padding:10,
+          cornerRadius:6,
+          boxPadding:4
+        }},
         scales:{
           x:{stacked:true,grid:{display:false},border:{display:false},ticks:{font:{family:'IBM Plex Mono',size:9},color:'rgba(255,255,255,.3)',maxRotation:0,autoSkip:true,maxTicksLimit:10}},
           y:{stacked:true,grid:{color:'rgba(255,255,255,.06)',drawTicks:false},border:{display:false},ticks:{font:{family:'IBM Plex Mono',size:9},color:'rgba(255,255,255,.3)',maxTicksLimit:4,padding:6}}
@@ -1029,7 +1053,7 @@ function render(){
     ysec.appendChild(yh);
     /* year photo — only on unfiltered all view */
     var yrYr=parseInt(yr);
-    if(YEAR_PHOTOS[yrYr]&&!activeCat&&!activeQ&&!activeFig&&!landmarksOnly){
+    if(YEAR_PHOTOS[yrYr]&&activeCats.size===0&&!activeQ&&!activeFig&&!landmarksOnly){
       var yp=document.createElement('div');yp.className='yr-photo';
       var yi=document.createElement('img');
       yi.src=YEAR_PHOTOS[yrYr];
@@ -1187,22 +1211,29 @@ document.getElementById('print-btn').addEventListener('click',function(){window.
 function closeOv(id){document.getElementById(id).classList.remove('on');document.body.style.overflow='';}
 function applyFilters(){
   filtered=EVENTS.filter(function(e){
-    if(activeYr!=='all'&&e.year!==parseInt(activeYr)) return false;
-    if(activeCat&&e.tag!==activeCat) return false;
+    if(activeYrs.size>0&&!activeYrs.has(String(e.year))) return false;
+    if(activeCats.size>0&&!activeCats.has(e.tag)) return false;
     if(activeQ){var q=activeQ.toLowerCase();if(e.headline.toLowerCase().indexOf(q)===-1&&e.text.toLowerCase().indexOf(q)===-1)return false;}
     if(activeFig&&(!e.figures||e.figures.indexOf(activeFig)===-1)) return false;
-    if(landmarksOnly&&!e.is_landmark) return false;
     return true;
   });
   render();
 }
-function setYr(yr){activeYr=yr;document.querySelectorAll('#yr-chips .chip').forEach(function(b){b.classList.toggle('on',b.dataset.yr===yr);});applyFilters();}
+function setYr(yr){
+  if(yr==='all'){activeYrs.clear();}
+  else{if(activeYrs.has(yr))activeYrs.delete(yr);else activeYrs.add(yr);}
+  document.querySelectorAll('#yr-chips .chip, #yr-chips-mobile .chip').forEach(function(b){
+    if(b.dataset.yr==='all') b.classList.toggle('on',activeYrs.size===0);
+    else b.classList.toggle('on',activeYrs.has(b.dataset.yr));
+  });
+  applyFilters();
+}
 document.getElementById('yr-chips').addEventListener('click',function(ev){var b=ev.target.closest('.chip');if(b)setYr(b.dataset.yr);});
 document.getElementById('cat-chips').addEventListener('click',function(ev){
   var b=ev.target.closest('.chip');if(!b)return;
   var c=b.dataset.cat;
-  if(activeCat===c){activeCat=null;b.classList.remove('on');}
-  else{document.querySelectorAll('#cat-chips .chip').forEach(function(x){x.classList.remove('on');});b.classList.add('on');activeCat=c;}
+  if(activeCats.has(c)){activeCats.delete(c);b.classList.remove('on');}
+  else{activeCats.add(c);b.classList.add('on');}
   applyFilters();
 });
 document.getElementById('fig-chips').addEventListener('click',function(ev){
@@ -1212,7 +1243,7 @@ document.getElementById('fig-chips').addEventListener('click',function(ev){
   else{document.querySelectorAll('#fig-chips .chip').forEach(function(x){x.classList.remove('on');});b.classList.add('on');activeFig=fig;}
   applyFilters();
 });
-document.getElementById('landmarks-btn').addEventListener('click',function(){landmarksOnly=!landmarksOnly;this.classList.toggle('on',landmarksOnly);applyFilters();});
+
 function setView(v){activeView=v;document.getElementById('feed').classList.toggle('compact',v==='compact');document.querySelectorAll('.vtb').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});}
 document.getElementById('vt-cards').addEventListener('click',function(){setView('cards');});
 document.getElementById('vt-compact').addEventListener('click',function(){setView('compact');});
@@ -1236,15 +1267,15 @@ window.addEventListener('DOMContentLoaded',function(){
 <script>
 /* Sidebar category filter */
 window.sbCat = function(cat, btn){
-  if(typeof activeCat === 'undefined') return;
-  if(activeCat === cat){
-    activeCat = null;
-    document.querySelectorAll('[data-cat]').forEach(function(b){ b.style.outline = ''; });
-    document.querySelectorAll('#cat-chips .chip').forEach(function(b){ b.classList.remove('on'); });
+  if(typeof activeCats === 'undefined') return;
+  if(activeCats.has(cat)){
+    activeCats.delete(cat);
+    document.querySelectorAll('[data-cat="'+cat+'"]').forEach(function(b){ b.classList && b.classList.remove('active'); });
+    document.querySelectorAll('#cat-chips .chip[data-cat="'+cat+'"]').forEach(function(b){ b.classList.remove('on'); });
   } else {
-    activeCat = cat;
-    document.querySelectorAll('[data-cat]').forEach(function(b){ b.style.outline = ''; });
-    document.querySelectorAll('#cat-chips .chip').forEach(function(b){ b.classList.toggle('on', b.dataset.cat === cat); });
+    activeCats.add(cat);
+    document.querySelectorAll('[data-cat="'+cat+'"]').forEach(function(b){ b.classList && b.classList.add('active'); });
+    document.querySelectorAll('#cat-chips .chip[data-cat="'+cat+'"]').forEach(function(b){ b.classList.add('on'); });
   }
   if(typeof applyFilters === 'function') applyFilters();
 };
