@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Timeline: North Korea–Russia Cooperation Since 2022 — CSIS Beyond Parallel</title>
-<meta name="description" content="Authoritative database tracking 268 verified events in the North Korea–Russia partnership since September 2022.">
+<meta name="description" content="Authoritative database tracking 268 verified events in the North Korea–Russia partnership since July 2022.">
 <meta property="og:title" content="Timeline: North Korea–Russia Cooperation Since 2022">
 <meta property="og:image" content="https://beyondparallel.csis.org/wp-content/uploads/2025/05/Putin-and-Kim-Jong-Un.png">
 <meta property="og:url" content="https://beyondparallel.csis.org/timeline-of-north-korea-russia-cooperation-since-2022/">
@@ -753,7 +753,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
     <div class="ctrl-row-1">
       <div class="srch">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="search-in" placeholder="Search 268 events&hellip;" autocomplete="off" spellcheck="false">
+        <input type="text" id="search-in" placeholder="Search 277 events&hellip;" autocomplete="off" spellcheck="false">
         <button class="srch-x" id="srch-x">&times;</button>
       </div>
       <div class="ctrl-yr" id="yr-chips">
@@ -1390,6 +1390,101 @@ window.scrollToYr = function(id){
   });
 
   document.addEventListener('click', function(){ drop.style.display = 'none'; });
+})();
+</script>
+
+
+<script>
+/* ── Google Sheets live data loader ── */
+(function(){
+  var CSV_URL = 'https://docs.google.com/spreadsheets/d/1cYatfFwdY_TVXnAu72dXmGN-39VG7AQw/export?format=csv&gid=360528921';
+
+  function parseCSV(text){
+    var lines = text.split('\n');
+    var headers = splitCSVRow(lines[0]);
+    var events = [];
+    for(var i=1;i<lines.length;i++){
+      var line = lines[i].trim();
+      if(!line) continue;
+      var cols = splitCSVRow(line);
+      var year  = parseInt(cols[0]);
+      var month = parseInt(cols[1]);
+      var day   = parseInt(cols[2]) || 1;
+      var headline = (cols[9]||'').trim();
+      var text     = (cols[10]||'').trim();
+      var media    = (cols[11]||'').trim();
+      var credit   = (cols[12]||'').trim();
+      var caption  = (cols[13]||'').trim();
+      var group    = (cols[17]||'').trim();
+      var source   = (cols[18]||'').trim();
+      if(!year || !headline) continue;
+      var tagMap = {Military:'military',Intelligence:'intelligence',Diplomatic:'diplomatic',Economic:'economic',Technology:'technology'};
+      events.push({
+        id: i-1,
+        year: year, month: month||1, day: day,
+        tag: tagMap[group] || 'diplomatic',
+        headline: headline,
+        text: text,
+        media: media,
+        credit: credit,
+        caption: caption,
+        source: source,
+        event_id: 'NK-RU-'+year+'-'+(month<10?'0':'')+month+'-'+(day<10?'0':'')+day+'-'+(i),
+        confidence: 'confirmed',
+        is_landmark: false,
+        figures: []
+      });
+    }
+    return events;
+  }
+
+  function splitCSVRow(row){
+    var result=[],cur='',inQ=false;
+    for(var i=0;i<row.length;i++){
+      var c=row[i];
+      if(c==='"'){ if(inQ&&row[i+1]==='"'){cur+='"';i++;}else{inQ=!inQ;} }
+      else if(c===','&&!inQ){result.push(cur);cur='';}
+      else{cur+=c;}
+    }
+    result.push(cur);
+    return result;
+  }
+
+  function showBanner(msg, isError){
+    var b = document.getElementById('sheet-banner');
+    if(!b){ b=document.createElement('div'); b.id='sheet-banner';
+      b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;padding:8px 16px;font-family:IBM Plex Mono,monospace;font-size:.65rem;text-align:center;transition:opacity .5s';
+      document.body.prepend(b); }
+    b.textContent = msg;
+    b.style.background = isError ? 'rgba(184,50,40,.9)' : 'rgba(0,65,101,.95)';
+    b.style.color = '#fff';
+    b.style.opacity = '1';
+    if(!isError) setTimeout(function(){ b.style.opacity='0'; }, 3000);
+  }
+
+  /* Fetch live data */
+  showBanner('Loading live data from Google Sheets…', false);
+  fetch(CSV_URL)
+    .then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.text();
+    })
+    .then(function(csv){
+      var liveEvents = parseCSV(csv);
+      if(liveEvents.length < 10) throw new Error('Too few rows: '+liveEvents.length);
+      /* Replace static EVENTS with live data */
+      window.EVENTS = liveEvents;
+      filtered = EVENTS.slice();
+      /* Update placeholder and counts */
+      var si = document.getElementById('search-in');
+      if(si) si.placeholder = 'Search '+EVENTS.length+' events…';
+      if(typeof applyFilters==='function') applyFilters();
+      showBanner('Live data loaded — '+liveEvents.length+' events', false);
+    })
+    .catch(function(err){
+      console.warn('Sheet fetch failed, using static data:', err.message);
+      showBanner('Could not reach Google Sheets — showing cached data', true);
+    });
 })();
 </script>
 
