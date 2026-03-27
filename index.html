@@ -1494,6 +1494,12 @@ function loadFromSheet() {
 
 addEventListener('DOMContentLoaded',function(){
   loadFromSheet();
+  /* Retry after 3s in case first fetch was blocked */
+  setTimeout(function(){
+    if(EVENTS.length < 270 || !EVENTS.some(function(e){return e.tag==='military';})){
+      loadFromSheet();
+    }
+  }, 3000);
 });
 </script>
 <script>
