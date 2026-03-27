@@ -1284,7 +1284,6 @@ function copyText(txt,msg){navigator.clipboard.writeText(txt).then(function(){to
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},2500);}
 function routeHash(){var h=window.location.hash;if(h&&h.indexOf('#event-')===0){var id=parseInt(h.replace('#event-',''));setTimeout(function(){var el=document.getElementById('event-'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},400);}}
 
-window.
 /* ═══════════════════════════════════════════════════
    GOOGLE SHEETS LIVE BACKEND
    Sheet: 10XZCpGPwokuLVFd-Mj_zt5A4bK7TD99AL-cHgQBY3Mc
