@@ -1495,11 +1495,10 @@ function loadFromSheet() {
 
 addEventListener('DOMContentLoaded',function(){
   loadFromSheet();
-  /* Retry after 3s in case first fetch was blocked */
+  /* Retry after 3s if categories wrong (GROUP_TAG undefined during first parse) */
   setTimeout(function(){
-    if(EVENTS.length < 270 || !EVENTS.some(function(e){return e.tag==='military';})){
-      loadFromSheet();
-    }
+    var dipCount = EVENTS.filter(function(e){return e.tag=='diplomatic';}).length;
+    if(dipCount > 100){ loadFromSheet(); }
   }, 3000);
 });
 </script>
