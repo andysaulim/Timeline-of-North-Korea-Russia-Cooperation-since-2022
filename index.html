@@ -1420,7 +1420,7 @@ function updateCounts(evs) {
     if (el) el.textContent = counts[k];
   });
   var si = document.getElementById('search-in');
-  if (si) si.placeholder = 'Search ' + counts.total + ' events\u2026';
+  if (si) si.placeholder = 'Search ' + counts.n + ' events\u2026';
   /* Update year chips */
   var years = Object.keys(buildYearData(evs)).sort();
   ['yr-chips','yr-chips-mobile'].forEach(function(id) {
