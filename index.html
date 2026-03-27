@@ -1351,7 +1351,8 @@ function sheetRowsToEvents(rows) {
     var yr  = parseInt(row[0]),  mo  = parseInt(row[1]),  dy  = parseInt(row[2]);
     var hed = (row[9]  || '').trim();
     var txt = (row[10] || '').trim();
-    var grp = (row[17] || '').trim();
+    var grpRaw = (row[17] || '').trim();
+    var grp = grpRaw.charAt(0).toUpperCase() + grpRaw.slice(1).toLowerCase();
     var src = (row[18] || '').trim();
     var med = (row[11] || '').trim();
     var crd = (row[12] || '').trim();
@@ -1366,7 +1367,7 @@ function sheetRowsToEvents(rows) {
       year:        yr,
       month:       mo || 1,
       day:         dy || 1,
-      tag:         inferTag(grp, hed, cleanTxt),
+      tag:         GROUP_TAG[grp] || GROUP_TAG[grpRaw] || inferTag(grp, hed, cleanTxt),
       headline:    hed,
       text:        cleanTxt,
       source:      src,
