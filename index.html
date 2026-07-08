@@ -158,9 +158,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 /* official chips — rectangular, dark, gold active */
 .date-in { font-family:var(--fm); font-size:.6rem; padding:2px 8px; border:1px solid var(--rule2); border-radius:100px; color:var(--ink2); background:var(--white); line-height:1.5 }
 .date-sep { color:var(--ink3); font-size:.65rem; align-self:center }
-.chip.fig { border-radius:3px; background:rgba(15,18,23,.07); border-color:rgba(15,18,23,.15); font-size:.55rem }
-.chip.fig:hover { background:var(--dark); border-color:var(--dark); color:var(--white) }
-.chip.fig.on { background:var(--dark); border-color:var(--gold2); color:var(--gold2) }
 
 
 
@@ -798,15 +795,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
         <button class="chip tech" data-cat="technology">Technology</button>
       </div>
       <div class="sep"></div>
-      <span class="ctrl-filter-lbl">Official</span>
-      <div class="chips" id="fig-chips">
-        <button class="chip fig" data-fig="Kim Jong-un">Kim Jong-un</button>
-        <button class="chip fig" data-fig="Vladimir Putin">Vladimir Putin</button>
-        <button class="chip fig" data-fig="Sergei Shoigu">Sergei Shoigu</button>
-        <button class="chip fig" data-fig="Sergei Lavrov">Sergei Lavrov</button>
-        <button class="chip fig" data-fig="Choe Son-hui">Choe Son-hui</button>
-      </div>
-      <div class="sep"></div>
       <span class="ctrl-filter-lbl">Date range</span>
       <div class="chips">
         <input type="date" class="date-in" id="date-from" aria-label="From date">
@@ -930,7 +918,7 @@ var YEAR_CAPS   = {"2022":"CSIS satellite imagery: Russia–North Korea rail tra
 var ML = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
 var MS = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var CATS = {military:'Military',diplomatic:'Diplomatic',intelligence:'Intelligence & Monitoring',economic:'Economic & Trade',technology:'Technology & Science'};
-var filtered = EVENTS.slice(), activeYrs=new Set(), activeCats=new Set(), activeQ='', activeView='cards', activeFig=null, landmarksOnly=false;
+var filtered = EVENTS.slice(), activeYrs=new Set(), activeCats=new Set(), activeQ='', activeView='cards', landmarksOnly=false;
 var sortDir='desc', activeFrom=null, activeTo=null;
 
 /* ── SIMPLE YEAR TIMELINE ── */
@@ -1110,7 +1098,7 @@ function render(){
     ysec.appendChild(yh);
     /* year photo — only on unfiltered all view */
     var yrYr=parseInt(yr);
-    if(YEAR_PHOTOS[yrYr]&&activeCats.size===0&&!activeQ&&!activeFig&&!landmarksOnly){
+    if(YEAR_PHOTOS[yrYr]&&activeCats.size===0&&!activeQ&&!landmarksOnly){
       var yp=document.createElement('div');yp.className='yr-photo';
       var yi=document.createElement('img');
       yi.src=YEAR_PHOTOS[yrYr];
@@ -1283,7 +1271,6 @@ function applyFilters(){
     if(activeYrs.size>0&&!activeYrs.has(String(e.year))) return false;
     if(activeCats.size>0&&!activeCats.has(e.tag)) return false;
     if(activeQ){var q=activeQ.toLowerCase();if(e.headline.toLowerCase().indexOf(q)===-1&&e.text.toLowerCase().indexOf(q)===-1)return false;}
-    if(activeFig&&(!e.figures||e.figures.indexOf(activeFig)===-1)) return false;
     if(activeFrom&&dateVal(e)<activeFrom) return false;
     if(activeTo&&dateVal(e)>activeTo) return false;
     return true;
@@ -1329,13 +1316,6 @@ document.getElementById('cat-chips').addEventListener('click',function(ev){
   var c=b.dataset.cat;
   if(activeCats.has(c)){activeCats.delete(c);b.classList.remove('on');}
   else{activeCats.add(c);b.classList.add('on');}
-  applyFilters();
-});
-document.getElementById('fig-chips').addEventListener('click',function(ev){
-  var b=ev.target.closest('.chip');if(!b)return;
-  var fig=b.dataset.fig;
-  if(activeFig===fig){activeFig=null;b.classList.remove('on');}
-  else{document.querySelectorAll('#fig-chips .chip').forEach(function(x){x.classList.remove('on');});b.classList.add('on');activeFig=fig;}
   applyFilters();
 });
 
