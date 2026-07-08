@@ -47,7 +47,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 }
 
 /* ── MASTHEAD ── */
-.mast { background:var(--dark); padding:2.5rem 0 0; position:relative; overflow:hidden }
+.mast { background:var(--dark); padding:1.6rem 0 0; position:relative; overflow:hidden }
 .mast-in { max-width:1060px; margin:0 auto; padding:0 2rem; position:relative; z-index:2 }
 
 /* Portrait — Kim + Putin side by side, right of masthead */
@@ -75,7 +75,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .mast-sub { font-family:var(--fn); font-size:clamp(.9rem,1.1vw,1.05rem); font-weight:300; color:rgba(255,255,255,.42); line-height:1.6; max-width:none; width:100%; margin-top:.5rem }
 
 /* Stat numbers — all use the same category color vars */
-.mast-stats { display:flex; gap:1.75rem; margin-top:1.3rem; flex-wrap:wrap; padding-bottom:1.1rem }
+.mast-stats { display:flex; gap:1.75rem; margin-top:.9rem; flex-wrap:wrap; padding-bottom:.75rem }
 .mst { display:flex; align-items:baseline; gap:.4rem }
 .mst-n { font-family:var(--fd); font-size:1.45rem; font-weight:700; line-height:1; letter-spacing:-.03em }
 .mst-n.total { color:var(--gold2) }
@@ -87,7 +87,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .mst-l { font-family:var(--fm); font-size:.5rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.28); line-height:1.3 }
 
 /* Stacked bar chart in masthead */
-.mast-chart { position:relative; height:120px; margin-bottom:.5rem }
+.mast-chart { position:relative; height:150px; margin:.4rem 0 .6rem }
 
 /* ── SIMPLE YEAR TIMELINE ── */
 .tl-wrap { background:var(--dark); border-bottom:3px solid var(--gold2); padding:.75rem 0 }
@@ -158,6 +158,16 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 /* official chips — rectangular, dark, gold active */
 .date-in { font-family:var(--fm); font-size:.6rem; padding:2px 8px; border:1px solid var(--rule2); border-radius:100px; color:var(--ink2); background:var(--white); line-height:1.5 }
 .date-sep { color:var(--ink3); font-size:.65rem; align-self:center }
+.chip.fig { border-radius:3px; background:rgba(15,18,23,.07); border-color:rgba(15,18,23,.15); font-size:.55rem }
+.chip.fig:hover { background:var(--dark); border-color:var(--dark); color:var(--white) }
+.chip.fig.on { background:var(--dark); border-color:var(--gold2); color:var(--gold2) }
+.fig-n { color:var(--ink4); font-size:.5rem }
+.chip.fig.on .fig-n,.chip.fig:hover .fig-n { color:rgba(255,255,255,.55) }
+.exp-wrap { position:relative }
+.exp-menu { display:none; position:absolute; right:0; top:calc(100% + 6px); background:var(--white); border:1px solid var(--rule2); border-radius:6px; box-shadow:0 10px 32px rgba(0,0,0,.14); padding:.3rem; min-width:160px; z-index:260 }
+.exp-menu.on { display:block }
+.exp-item { display:block; width:100%; text-align:left; font-family:var(--fm); font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink2); padding:7px 10px; border-radius:4px; cursor:pointer; white-space:nowrap; background:none; border:none }
+.exp-item:hover { background:var(--cream); color:var(--navy) }
 
 
 
@@ -419,36 +429,39 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 
 /* ══ KEY NUMBERS CARDS ══ */
 .key-numbers {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: .6rem;
-  margin: .9rem 0 .6rem;
+  display: flex;
+  flex-wrap: wrap;
+  margin: .6rem 0 .4rem;
+  border: 1px solid rgba(255,199,38,.18);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255,255,255,.045);
 }
 .kn-card {
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,199,38,.2);
-  border-top: 2px solid rgba(255,199,38,.55);
-  border-radius: 6px;
-  padding: .7rem .9rem .6rem;
+  flex: 1 1 0;
+  min-width: 130px;
+  border-left: 1px solid rgba(255,255,255,.08);
+  padding: .55rem .85rem .5rem;
 }
+.kn-card:first-child { border-left: none }
 .kn-val {
   font-family: var(--fd);
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--gold2);
   letter-spacing: -.03em;
   line-height: 1;
-  margin-bottom: .25rem;
+  margin-bottom: .2rem;
 }
 .kn-lbl {
   font-family: var(--fn);
-  font-size: .7rem;
-  color: rgba(255,255,255,.5);
+  font-size: .62rem;
+  color: rgba(255,255,255,.45);
   line-height: 1.35;
 }
 @media (max-width: 720px) {
-  .key-numbers { grid-template-columns: repeat(2, 1fr); gap: .4rem }
-  .kn-val { font-size: 1.25rem }
+  .kn-card { min-width: 46% }
+  .kn-val { font-size: 1rem }
 }
 
 @media (max-width: 720px) {
@@ -501,15 +514,8 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .filter-toggle-btn:hover { background: var(--navy3) }
 .filter-toggle-btn.active { background: var(--gold); color: var(--navy) }
 
-.kn-card-gold {
-  border-color: rgba(255,199,38,.4);
-  border-top-color: var(--gold2);
-  background: rgba(255,199,38,.07);
-}
-.kn-val-gold {
-  color: var(--gold2);
-  font-size: 1.25rem;
-}
+.kn-card-gold { background: rgba(255,199,38,.08) }
+.kn-val-gold { color: var(--gold2) }
 
 /* yr-chips-mobile and its label: desktop hidden, mobile only */
 #yr-chips-mobile { display: none }
@@ -745,6 +751,9 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   </div>
 </header>
 
+<!-- YEAR SCRUBBER — distribution + click-to-jump + scroll position -->
+<div class="tl-wrap no-print"><div class="tl-inner" id="tl-inner"></div></div>
+
 <!-- SIMPLE YEAR TIMELINE -->
 <nav class="ctrl">
   <div class="ctrl-in">
@@ -768,10 +777,15 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
         <span class="ctrl-count" id="ctrl-count">&hellip;</span>
         <div class="vt"><button class="vtb on" id="st-new" data-s="desc">Newest</button><button class="vtb" id="st-old" data-s="asc">Oldest</button></div>
         <div class="vt"><button class="vtb on" id="vt-cards" data-v="cards">Cards</button><button class="vtb" id="vt-compact" data-v="compact">Compact</button></div>
-        <button class="tool no-print" id="csv-btn">CSV</button>
-        <button class="tool no-print" id="json-btn">JSON</button>
-        <button class="tool no-print" id="embed-btn">Embed</button>
-        <button class="tool no-print" id="print-btn">Print</button>
+        <div class="exp-wrap no-print">
+          <button class="tool" id="export-btn">Export &#9662;</button>
+          <div class="exp-menu" id="export-menu">
+            <button class="exp-item" id="csv-btn">Download CSV</button>
+            <button class="exp-item" id="json-btn">Download JSON</button>
+            <button class="exp-item" id="embed-btn">Embed timeline</button>
+            <button class="exp-item" id="print-btn">Print</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -794,6 +808,9 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
         <button class="chip eco"  data-cat="economic">Economic</button>
         <button class="chip tech" data-cat="technology">Technology</button>
       </div>
+      <div class="sep"></div>
+      <span class="ctrl-filter-lbl">Official</span>
+      <div class="chips" id="fig-chips"></div>
       <div class="sep"></div>
       <span class="ctrl-filter-lbl">Date range</span>
       <div class="chips">
@@ -899,12 +916,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   <button class="fn-btn top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg> Top
   </button>
-  <div class="fn-group-label">Jump to year</div>
-  <button class="fn-btn" onclick="var e=document.getElementById('yr-2022');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})">2022</button>
-  <button class="fn-btn" onclick="var e=document.getElementById('yr-2023');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})">2023</button>
-  <button class="fn-btn" onclick="var e=document.getElementById('yr-2024');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})">2024</button>
-  <button class="fn-btn" onclick="var e=document.getElementById('yr-2025');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})">2025</button>
-  <button class="fn-btn" onclick="var e=document.getElementById('yr-2026');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})">2026</button>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -919,13 +930,29 @@ var ML = ['','January','February','March','April','May','June','July','August','
 var MS = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var CATS = {military:'Military',diplomatic:'Diplomatic',intelligence:'Intelligence & Monitoring',economic:'Economic & Trade',technology:'Technology & Science'};
 var filtered = EVENTS.slice(), activeYrs=new Set(), activeCats=new Set(), activeQ='', activeView='cards', landmarksOnly=false;
-var sortDir='desc', activeFrom=null, activeTo=null;
+var sortDir='desc', activeFrom=null, activeTo=null, activeFig=null;
+
+/* ── PEOPLE TAGGING — figures derived from headline+text at load time ── */
+var FIGURES = [
+  ['Kim Jong-un',    /kim\s+jong[\s-]?un/i],
+  ['Vladimir Putin', /putin/i],
+  ['Sergei Shoigu',  /shoigu/i],
+  ['Sergei Lavrov',  /lavrov/i],
+  ['Choe Son-hui',   /choe\s+s[oō]n[\s-]?hui/i]
+];
+function tagFigures(evs){
+  evs.forEach(function(e){
+    var h = e.headline + ' ' + e.text;
+    e.figures = FIGURES.filter(function(f){ return f[1].test(h); }).map(function(f){ return f[0]; });
+  });
+}
 
 /* ── SIMPLE YEAR TIMELINE ── */
 function buildTimeline(){
   var inner = document.getElementById('tl-inner');
   if(!inner) return;
-  var years  = [2022,2023,2024,2025,2026];
+  inner.innerHTML='';
+  var years = Object.keys(YEAR_DATA).map(Number).sort(function(a,b){return a-b;});
   var maxEvt = 0;
   years.forEach(function(y){ if(YEAR_DATA[y]&&YEAR_DATA[y].total>maxEvt) maxEvt=YEAR_DATA[y].total; });
   var MAXH = 70;
@@ -982,7 +1009,9 @@ function buildTimeline(){
     });
     document.querySelectorAll('.tl-yr-col').forEach(function(c){ c.classList.toggle('active',c.dataset.yr===active); });
   }
-  window.addEventListener('scroll',updActive,{passive:true});
+  if(window._tlUpd) window.removeEventListener('scroll',window._tlUpd);
+  window._tlUpd = updActive;
+  window.addEventListener('scroll',window._tlUpd,{passive:true});
 }
 
 /* ── CHART ── */
@@ -1098,7 +1127,7 @@ function render(){
     ysec.appendChild(yh);
     /* year photo — only on unfiltered all view */
     var yrYr=parseInt(yr);
-    if(YEAR_PHOTOS[yrYr]&&activeCats.size===0&&!activeQ&&!landmarksOnly){
+    if(YEAR_PHOTOS[yrYr]&&activeCats.size===0&&!activeQ&&!activeFig&&!landmarksOnly){
       var yp=document.createElement('div');yp.className='yr-photo';
       var yi=document.createElement('img');
       yi.src=YEAR_PHOTOS[yrYr];
@@ -1271,6 +1300,7 @@ function applyFilters(){
     if(activeYrs.size>0&&!activeYrs.has(String(e.year))) return false;
     if(activeCats.size>0&&!activeCats.has(e.tag)) return false;
     if(activeQ){var q=activeQ.toLowerCase();if(e.headline.toLowerCase().indexOf(q)===-1&&e.text.toLowerCase().indexOf(q)===-1)return false;}
+    if(activeFig&&(!e.figures||e.figures.indexOf(activeFig)===-1)) return false;
     if(activeFrom&&dateVal(e)<activeFrom) return false;
     if(activeTo&&dateVal(e)>activeTo) return false;
     return true;
@@ -1288,6 +1318,21 @@ function setSort(d){
 }
 document.getElementById('st-new').addEventListener('click',function(){setSort('desc');});
 document.getElementById('st-old').addEventListener('click',function(){setSort('asc');});
+document.getElementById('fig-chips').addEventListener('click',function(ev){
+  var b=ev.target.closest('.chip');if(!b)return;
+  var fig=b.dataset.fig;
+  if(activeFig===fig){activeFig=null;b.classList.remove('on');}
+  else{document.querySelectorAll('#fig-chips .chip').forEach(function(x){x.classList.remove('on');});b.classList.add('on');activeFig=fig;}
+  applyFilters();
+});
+document.getElementById('export-btn').addEventListener('click',function(ev){
+  ev.stopPropagation();
+  document.getElementById('export-menu').classList.toggle('on');
+});
+document.addEventListener('click',function(){
+  var m=document.getElementById('export-menu');
+  if(m)m.classList.remove('on');
+});
 function parseDateInput(v){
   if(!v) return null;
   var p=v.split('-');
@@ -1514,16 +1559,18 @@ function updateCounts(evs) {
       c.appendChild(btn);
     });
   });
-  /* Update float nav year buttons */
-  var fn = document.querySelector('.float-nav');
-  if (fn) {
-    fn.querySelectorAll('.fn-btn[onclick*="yr-"]').forEach(function(b){b.remove();});
-    years.forEach(function(y) {
+  /* Official chips with live counts (figures tagged at load time) */
+  var fc = document.getElementById('fig-chips');
+  if (fc) {
+    fc.innerHTML = '';
+    FIGURES.forEach(function(f) {
+      var n = evs.filter(function(e){ return e.figures && e.figures.indexOf(f[0]) !== -1; }).length;
+      if (!n) return;
       var btn = document.createElement('button');
-      btn.className = 'fn-btn';
-      btn.setAttribute('onclick', "var e=document.getElementById('yr-"+y+"');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})");
-      btn.textContent = y;
-      fn.appendChild(btn);
+      btn.className = 'chip fig' + (activeFig === f[0] ? ' on' : '');
+      btn.dataset.fig = f[0];
+      btn.innerHTML = safe(f[0]) + ' <span class="fig-n">' + n + '</span>';
+      fc.appendChild(btn);
     });
   }
 }
@@ -1553,10 +1600,12 @@ function loadFromSheet() {
       console.log('[Sheet] Loaded ' + evs.length + ' events from Google Sheets');
       EVENTS    = evs;
       YEAR_DATA = buildYearData(evs);
+      tagFigures(evs);
       updateCounts(evs);
       hideLoading();
       applyFilters();
       routeHash();
+      try { buildTimeline(); } catch(ex) {}
       try { if (typeof Chart !== 'undefined') buildChart(); } catch(ex) {}
     })
     .catch(function(err) {
@@ -1565,9 +1614,11 @@ function loadFromSheet() {
       /* Fall back to baked-in data — sort explicitly, never trust row order */
       EVENTS = STATIC_EVENTS.slice().sort(function(a,b){return dateVal(a)-dateVal(b);});
       YEAR_DATA = buildYearData(EVENTS);
+      tagFigures(EVENTS);
       updateCounts(EVENTS);
       applyFilters();
       routeHash();
+      try { buildTimeline(); } catch(ex) {}
       try { if (typeof Chart !== 'undefined') buildChart(); } catch(ex) {}
     });
 }
