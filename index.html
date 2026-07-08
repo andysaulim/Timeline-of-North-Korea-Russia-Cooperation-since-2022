@@ -304,11 +304,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .soc { font-family:var(--fm); font-size:.56rem; letter-spacing:.08em; text-transform:uppercase; padding:5px 12px; border-radius:3px; color:var(--white); transition:opacity .15s; cursor:pointer }
 .soc:hover { opacity:.82 }
 /* float nav */
-.float-nav { position:fixed; right:1.5rem; bottom:2rem; display:flex; flex-direction:column; gap:.35rem; z-index:300 }
-.fn-btn { font-family:var(--fm); font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; background:var(--dark); color:rgba(255,255,255,.7); border:1px solid rgba(255,199,38,.22); border-radius:3px; padding:5px 11px; cursor:pointer; transition:all .15s; white-space:nowrap; display:flex; align-items:center; gap:.35rem; justify-content:flex-end }
-.fn-btn:hover { background:var(--navy); color:#fff; border-color:var(--navy) }
-.fn-btn.top-btn { background:var(--navy); border-color:var(--navy); color:#fff }
-.fn-group-label { font-family:var(--fm); font-size:.48rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.22); text-align:right; padding-right:2px }
 /* toast */
 .toast { position:fixed; bottom:1.75rem; left:50%; transform:translateX(-50%); background:var(--dark); color:var(--white); font-family:var(--fm); font-size:.68rem; padding:.5rem 1.25rem; border-radius:3px; border-left:3px solid var(--gold2); opacity:0; pointer-events:none; z-index:700; white-space:nowrap; transition:opacity .2s }
 .toast.on { opacity:1 }
@@ -466,8 +461,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 
 @media (max-width: 720px) {
   /* Float nav: hide year buttons, keep Top */
-  .fn-group-label { display: none }
-  .float-nav .fn-btn:not(.top-btn) { display: none }
 
   /* Controls */
   .ctrl-in { padding: 0 1rem }
@@ -611,8 +604,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   .mo-label { font-size: .52rem; padding: .35rem 0 }
 
   /* ── Float nav: keep Top + Bottom only ── */
-  .float-nav { right: .75rem; bottom: .75rem; gap: .3rem }
-  .fn-btn { font-size: .6rem; padding: 5px 10px }
 
   /* ── Controls bar ── */
   .ctrl-in { padding: 0 1rem }
@@ -665,8 +656,6 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 @media (max-width: 720px) {
 
   /* Float nav: show Top + Bottom, hide year jump buttons */
-  .float-nav .fn-btn:not(.top-btn):not(.bottom-btn) { display: none }
-  .fn-group-label { display: none }
 
   /* Bar chart: hide on mobile — too small to be useful */
   .mast-chart { display: none }
@@ -909,14 +898,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   </div>
 </div></div>
 
-<div class="float-nav no-print">
-  <button class="fn-btn bottom-btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg> Bottom
-  </button>
-  <button class="fn-btn top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg> Top
-  </button>
-</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" onerror="console.warn('Chart.js CDN unavailable')"></script>
@@ -1470,7 +1452,6 @@ function sheetRowsToEvents(rows) {
       credit:      crd,
       caption:     cap,
       event_id:    'NK-RU-' + yr + '-' + String(mo).padStart(2,'0') + '-' + String(dy).padStart(2,'0') + '-' + String(id).padStart(2,'0'),
-      confidence:  'confirmed',
       is_landmark: false
     });
   }
