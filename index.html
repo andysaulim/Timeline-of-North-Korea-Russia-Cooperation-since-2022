@@ -12,23 +12,47 @@
 <meta name="twitter:site" content="@CSISKoreaChair">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#faf8f2">
+<script>
+/* Pre-paint theme init — set data-theme before first paint to avoid flash */
+(function(){try{var t=localStorage.getItem('bp-theme');if(t!=='dark'&&t!=='light'){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();
+</script>
 <style>
 :root {
-  --ink:#0f1217; --ink2:#3a404f; --ink3:#7a8090; --ink4:#aab0bc;
-  --cream:#f7f4ef; --white:#fff;
-  --rule:rgba(15,18,23,.07); --rule2:rgba(15,18,23,.13);
-  --navy:#003a5c; --navy2:#00517f; --navy3:#006aa6; --dark:#050d18;
-  --gold:#e8a800; --gold2:#ffc726; --golddim:rgba(232,168,0,.14);
+  /* Provocations-aligned light palette */
+  --paper:#faf8f2; --surface:#fffefb;
+  --ink:#1b1a15; --ink2:#57544b; --ink3:#8c887c; --ink4:#a8a59d;
+  --hair:#e7e3d8; --hair2:#dcd7c9;
+  --link:#0d4c72; --focus:#0d4c72; --hover:#f2eee4;
+  --grid:#eae6db; --axis:#cfcabc;
+  /* Timeline aliases (keep existing rules working) */
+  --cream:var(--paper); --white:var(--surface);
+  --rule:#e7e3d8; --rule2:#dcd7c9;
+  --navy:#003a5c; --navy2:#00517f; --navy3:#0d4c72;
+  --dark:#1b1a15;               /* now only: dark text on gold badges */
+  --gold:#bf9a2e; --gold2:#d9a800; --golddim:rgba(191,154,46,.14);
   --c-mil:#b83228;
   --c-int:#1a5f8a;
   --c-dip:#7a2f8a;
   --c-eco:#3a7a10;
-  --c-tech:#b86200;
-  --fd:"Libre Baskerville",Georgia,serif;
-  --fn:"Source Sans 3","Helvetica Neue",Arial,sans-serif;
+  --c-tech:#0c7080;             /* canonical: teal (was orange in CSS, teal in JS) */
+  --fd:"Source Serif 4","Charter",Georgia,serif;
+  --fn:"Inter","Helvetica Neue",Arial,sans-serif;
   --fm:"IBM Plex Mono","Courier New",monospace;
   --ease:cubic-bezier(.22,1,.36,1);
+}
+:root[data-theme="dark"] {
+  color-scheme:dark;
+  --paper:#121210; --surface:#181814;
+  --ink:#f2efe5; --ink2:#bab6a8; --ink3:#8c887c; --ink4:#6f6c64;
+  --hair:#2a2925; --hair2:#35342e;
+  --link:#7cb8e0; --focus:#7cb8e0; --hover:#20201b;
+  --grid:#25241f; --axis:#3a3931;
+  --rule:#2a2925; --rule2:#35342e;
+  --navy:#2b6a92; --navy2:#3a7cab; --navy3:#7cb8e0;
+  --gold:#d6b048; --gold2:#e0c05a; --golddim:rgba(214,176,72,.16);
+  --c-mil:#e0655a; --c-int:#4d9fd4; --c-dip:#b072c4; --c-eco:#6fb03a; --c-tech:#3fb3c7;
 }
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
 html { font-size:16px; scroll-behavior:smooth; -webkit-text-size-adjust:100% }
@@ -36,61 +60,50 @@ body { font-family:var(--fn); background:var(--cream); color:var(--ink); line-he
 img { display:block; max-width:100%; height:auto }
 a { color:var(--navy3); text-decoration:none }
 button { font-family:inherit; cursor:pointer; border:none; background:none }
-mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; padding:0 2px }
+mark { background:rgba(191,154,46,.28); color:inherit; border-radius:2px; padding:0 2px }
+:focus-visible { outline:2px solid var(--focus); outline-offset:2px }
 
 @media print {
-  
   body { background:#fff; color:#000; font-size:11pt }
-  .mast { background:#000!important; -webkit-print-color-adjust:exact; print-color-adjust:exact }
   .card,.landmark-card { break-inside:avoid; box-shadow:none; border:1px solid #ccc }
   @page { margin:2cm; size:A4 }
 }
 
 /* ── MASTHEAD ── */
-.mast { background:var(--dark); padding:1.6rem 0 0; position:relative; overflow:hidden }
+.goldrule { height:2px; background:var(--gold) }
+.mast { background:var(--paper); padding:1.9rem 0 .4rem; position:relative }
 .mast-in { max-width:1060px; margin:0 auto; padding:0 2rem; position:relative; z-index:2 }
 
-/* Portrait — Kim + Putin side by side, right of masthead */
-.mast-portrait {
-  position:absolute; top:0; right:0; bottom:0;
-  width:clamp(220px, 32%, 380px);
-  z-index:1; pointer-events:none;
-}
-.mast-portrait img {
-  width:100%; height:100%;
-  object-fit:cover; object-position:center 10%;
-  display:block;
-}
-/* Dark gradient fading left so text stays readable */
-.mast-portrait::before {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(to right, var(--dark) 0%, rgba(5,13,24,.55) 45%, transparent 100%);
-  z-index:2;
-}
-@media(max-width:720px) { .mast-portrait { display:none } }
+.mast-eyebrow { font-family:var(--fm); font-size:.6rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--ink3); display:block; margin-bottom:.6rem }
+.mast-title { font-family:var(--fd); font-size:clamp(1.55rem,2.6vw,2.4rem); font-weight:700; color:var(--ink); line-height:1.1; letter-spacing:-.015em; max-width:760px }
+.mast-title em { font-style:italic; font-weight:400; color:var(--ink3) }
+.mast-sub { font-family:var(--fd); font-size:clamp(.98rem,1.1vw,1.12rem); font-weight:400; color:var(--ink2); line-height:1.5; max-width:66ch; margin-top:.7rem }
 
-.mast-eyebrow { font-family:var(--fm); font-size:.56rem; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:rgba(232,168,0,.55); display:block; margin-bottom:.55rem }
-.mast-title { font-family:var(--fd); font-size:clamp(1.5rem,2.5vw,2.35rem); font-weight:700; color:#fff; line-height:1.15; white-space:nowrap; letter-spacing:-.02em; max-width:600px }
-.mast-title em { font-style:italic; font-weight:400; color:rgba(255,255,255,.35) }
-.mast-sub { font-family:var(--fn); font-size:clamp(.9rem,1.1vw,1.05rem); font-weight:300; color:rgba(255,255,255,.42); line-height:1.6; max-width:none; width:100%; margin-top:.5rem }
+/* Byline — text-link actions (matches provocations) */
+.byline { display:flex; flex-wrap:wrap; gap:8px 16px; align-items:baseline; margin-top:1rem; font-size:.78rem; color:var(--muted, var(--ink3)) }
+.byline .b-sep { color:var(--hair2) }
+.byline .b-static { color:var(--ink3) }
+.linkbtn { background:none; border:none; font-family:var(--fn); font-size:.78rem; color:var(--link); cursor:pointer; padding:0; border-bottom:1px solid transparent; display:inline-flex; align-items:center; gap:.32rem }
+.linkbtn:hover { border-bottom-color:var(--link) }
+.theme-toggle { background:none; border:none; color:var(--link); cursor:pointer; font-size:.78rem; font-family:var(--fn); padding:0 }
 
 /* Stat numbers — all use the same category color vars */
 .mast-stats { display:flex; gap:1.75rem; margin-top:.9rem; flex-wrap:wrap; padding-bottom:.75rem }
 .mst { display:flex; align-items:baseline; gap:.4rem }
 .mst-n { font-family:var(--fd); font-size:1.45rem; font-weight:700; line-height:1; letter-spacing:-.03em }
-.mst-n.total { color:var(--gold2) }
+.mst-n.total { color:var(--gold) }
 .mst-n.mil   { color:var(--c-mil) }
 .mst-n.int   { color:var(--c-int) }
 .mst-n.dip   { color:var(--c-dip) }
 .mst-n.eco   { color:var(--c-eco) }
 .mst-n.tech  { color:var(--c-tech) }
-.mst-l { font-family:var(--fm); font-size:.5rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.28); line-height:1.3 }
+.mst-l { font-family:var(--fm); font-size:.5rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink3); line-height:1.3 }
 
 /* Stacked bar chart in masthead */
 .mast-chart { position:relative; height:150px; margin:.4rem 0 .6rem }
 
 /* ── SIMPLE YEAR TIMELINE ── */
-.tl-wrap { background:var(--dark); border-bottom:3px solid var(--gold2); padding:.75rem 0 }
+.tl-wrap { background:var(--surface); border-top:1px solid var(--hair); border-bottom:2px solid var(--gold); padding:.75rem 0 }
 .tl-inner { max-width:1060px; margin:0 auto; padding:0 2rem; display:flex; gap:0; align-items:flex-end }
 .tl-yr-col {
   flex:1; display:flex; flex-direction:column; align-items:center;
@@ -107,25 +120,24 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .tl-yr-lbl {
   position:absolute; bottom:4px;
   font-family:var(--fm); font-size:.7rem; font-weight:500;
-  letter-spacing:.08em; color:rgba(255,199,38,.7);
+  letter-spacing:.08em; color:var(--ink3);
 }
 /* event count */
 .tl-yr-count {
-  font-family:var(--fm); font-size:.55rem; color:rgba(255,255,255,.4);
+  font-family:var(--fm); font-size:.55rem; color:var(--ink3);
   margin-bottom:3px;
 }
 /* landmark dots */
 .tl-yr-dots { display:flex; gap:2px; margin-bottom:4px; flex-wrap:wrap; justify-content:center }
 .tl-yr-dot {
   width:6px; height:6px; border-radius:50%;
-  background:var(--gold2);
-  box-shadow:0 0 3px rgba(255,199,38,.4);
+  background:var(--gold);
 }
 /* cursor / active year indicator */
-.tl-yr-col.active .tl-yr-lbl { color:var(--gold2) }
+.tl-yr-col.active .tl-yr-lbl { color:var(--ink); font-weight:700 }
 .tl-yr-col::after {
   content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
-  width:0; height:2px; background:var(--gold2); transition:width .2s;
+  width:0; height:2px; background:var(--gold); transition:width .2s;
 }
 .tl-yr-col:hover::after,.tl-yr-col.active::after { width:60% }
 
@@ -159,8 +171,8 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .date-in { font-family:var(--fm); font-size:.6rem; padding:2px 8px; border:1px solid var(--rule2); border-radius:100px; color:var(--ink2); background:var(--white); line-height:1.5 }
 .date-sep { color:var(--ink3); font-size:.65rem; align-self:center }
 .chip.fig { border-radius:3px; background:rgba(15,18,23,.07); border-color:rgba(15,18,23,.15); font-size:.55rem }
-.chip.fig:hover { background:var(--dark); border-color:var(--dark); color:var(--white) }
-.chip.fig.on { background:var(--dark); border-color:var(--gold2); color:var(--gold2) }
+.chip.fig:hover { background:var(--navy); border-color:var(--navy); color:#fff }
+.chip.fig.on { background:var(--navy); border-color:var(--navy); color:#fff }
 .fig-n { color:var(--ink4); font-size:.5rem }
 .chip.fig.on .fig-n,.chip.fig:hover .fig-n { color:rgba(255,255,255,.55) }
 .exp-wrap { position:relative }
@@ -190,6 +202,10 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .sn-n { font-family:var(--fd); font-size:.9rem; font-weight:700; color:var(--navy); transition:color .15s }
 .sn-c { font-family:var(--fm); font-size:.54rem; color:var(--ink3); background:var(--golddim); padding:1px 5px; border-radius:8px }
 .sn-cat { display:flex; align-items:center; gap:.5rem; font-family:var(--fm); font-size:.54rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink2); margin-bottom:.35rem }
+.sb-year { display:block; text-decoration:none; background:var(--surface); border:1px solid var(--hair); border-radius:8px; padding:.5rem .75rem .45rem; margin-bottom:.35rem; transition:border-color .15s,background .15s }
+.sb-year:hover { border-color:var(--gold); background:var(--hover) }
+.sb-year .sb-y { font-family:var(--fd); font-size:.95rem; font-weight:700; color:var(--ink); line-height:1 }
+.sb-year .sb-c { font-family:var(--fm); font-size:.62rem; color:var(--gold); margin-top:4px }
 .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0 }
 
 /* ── FEED ── */
@@ -208,7 +224,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 /* ── CARDS — category colors all use the same vars ── */
 .landmark-card { background:var(--white); border:1px solid var(--rule); border-radius:3px; overflow:hidden; margin-bottom:2rem; transition:box-shadow .25s,border-color .25s }
 .landmark-card:hover { box-shadow:0 8px 36px rgba(0,0,0,.1); border-color:rgba(0,58,92,.15) }
-.lm-photo { width:100%; height:360px; position:relative; overflow:hidden; background:var(--dark); cursor:zoom-in }
+.lm-photo { width:100%; height:360px; position:relative; overflow:hidden; background:var(--hair2); cursor:zoom-in }
 .lm-photo img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .6s var(--ease) }
 .landmark-card:hover .lm-photo img { transform:scale(1.02) }
 .lm-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(5,13,24,.68) 0%,transparent 55%); pointer-events:none }
@@ -224,7 +240,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .lm-body { padding:1.4rem 1.6rem 1.25rem }
 .lm-meta { display:flex; align-items:center; gap:.5rem; margin-bottom:.7rem; flex-wrap:wrap }
 .lm-date { font-family:var(--fm); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink3) }
-.lm-why { font-family:var(--fm); font-size:.54rem; letter-spacing:.07em; text-transform:uppercase; color:var(--gold); background:rgba(232,168,0,.1); border:1px solid rgba(232,168,0,.22); padding:2px 8px; border-radius:2px }
+.lm-why { font-family:var(--fm); font-size:.54rem; letter-spacing:.07em; text-transform:uppercase; color:var(--gold); background:var(--golddim); border:1px solid var(--golddim); padding:2px 8px; border-radius:2px }
 .lm-hed { font-family:var(--fd); font-size:clamp(1.1rem,2.5vw,1.5rem); font-weight:700; color:var(--navy); line-height:1.22; margin-bottom:.85rem; letter-spacing:-.02em }
 .lm-text { font-family:var(--fn); font-size:.9rem; line-height:1.72; color:var(--ink2) }
 .lm-caption { font-family:var(--fm); font-size:.58rem; color:var(--ink4); line-height:1.45; margin-top:.65rem; padding-top:.65rem; border-top:1px solid var(--rule) }
@@ -236,7 +252,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .card-bare.intelligence { border-left-color:var(--c-int) }
 .card-bare.economic     { border-left-color:var(--c-eco) }
 .card-bare.technology   { border-left-color:var(--c-tech) }
-.card-photo { width:100%; height:270px; position:relative; overflow:hidden; background:var(--dark); cursor:zoom-in }
+.card-photo { width:100%; height:270px; position:relative; overflow:hidden; background:var(--hair2); cursor:zoom-in }
 .card-photo img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .55s var(--ease) }
 .card:hover .card-photo img { transform:scale(1.02) }
 .ph-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(5,13,24,.28) 0%,transparent 50%); pointer-events:none }
@@ -264,8 +280,8 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .btn-ghost:hover { background:var(--navy); color:var(--white); border-color:var(--navy) }
 /* compact */
 .compact-row { display:none; align-items:center; gap:.65rem; padding:.42rem .5rem; border-bottom:1px solid var(--rule); cursor:pointer; transition:background .12s; border-radius:2px }
-.compact-row:hover { background:rgba(232,168,0,.07) }
-.compact-row.lm-row { background:rgba(232,168,0,.05); border-left:2px solid var(--gold2); padding-left:.4rem }
+.compact-row:hover { background:var(--hover) }
+.compact-row.lm-row { background:var(--golddim); border-left:2px solid var(--gold); padding-left:.4rem }
 .cr-date { font-family:var(--fm); font-size:.57rem; color:var(--ink3); letter-spacing:.06em; flex-shrink:0; min-width:82px }
 .cr-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0 }
 .cr-hed { font-family:var(--fn); font-size:.82rem; color:var(--ink); flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
@@ -305,30 +321,33 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .soc:hover { opacity:.82 }
 /* float nav */
 /* toast */
-.toast { position:fixed; bottom:1.75rem; left:50%; transform:translateX(-50%); background:var(--dark); color:var(--white); font-family:var(--fm); font-size:.68rem; padding:.5rem 1.25rem; border-radius:3px; border-left:3px solid var(--gold2); opacity:0; pointer-events:none; z-index:700; white-space:nowrap; transition:opacity .2s }
+.totop { position:fixed; bottom:24px; right:24px; width:40px; height:40px; border-radius:50%; background:var(--surface); border:1px solid var(--hair2); color:var(--ink2); font-size:16px; cursor:pointer; opacity:0; pointer-events:none; transition:opacity .2s; z-index:50; box-shadow:0 2px 10px rgba(0,0,0,.08) }
+.totop.on { opacity:1; pointer-events:auto }
+.totop:hover { border-color:var(--link); color:var(--link) }
+.toast { position:fixed; bottom:1.75rem; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--paper); font-family:var(--fm); font-size:.68rem; padding:.5rem 1.25rem; border-radius:3px; border-left:3px solid var(--gold); opacity:0; pointer-events:none; z-index:700; white-space:nowrap; transition:opacity .2s }
 .toast.on { opacity:1 }
-.footer { background:var(--dark); border-top:1px solid rgba(232,168,0,.18); padding:1.35rem 2rem; text-align:center }
-.footer p { font-family:var(--fn); font-size:.78rem; color:rgba(255,255,255,.3) }
-.footer a { color:rgba(232,168,0,.5) }
-.footer a:hover { color:var(--gold2); text-decoration:none }
+.footer { background:var(--surface); border-top:1px solid var(--hair); padding:1.35rem 2rem; text-align:center }
+.footer p { font-family:var(--fn); font-size:.78rem; color:var(--ink3) }
+.footer a { color:var(--link) }
+.footer a:hover { color:var(--gold); text-decoration:none }
 
 .chip.lm-chip {
-  color: #7a6500;
-  border-color: rgba(232,168,0,.5);
-  background: rgba(232,168,0,.12);
+  color: var(--gold);
+  border-color: var(--golddim);
+  background: var(--golddim);
   border-radius: 100px;
   font-family: var(--fn);
   font-size: .72rem;
 }
 .chip.lm-chip:hover {
-  background: rgba(232,168,0,.22);
+  background: var(--gold);
   border-color: var(--gold);
-  color: #5a4a00;
+  color: #fff;
 }
 .chip.lm-chip.on {
   background: var(--gold) !important;
   border-color: var(--gold) !important;
-  color: #1a1200 !important;
+  color: #fff !important;
 }
 
 .tool {
@@ -338,10 +357,10 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   letter-spacing: 0;
   text-transform: none;
   padding: 4px 12px;
-  border: 1px solid rgba(232,168,0,.45);
+  border: 1px solid var(--rule2);
   border-radius: 100px;
-  color: var(--gold);
-  background: rgba(232,168,0,.08);
+  color: var(--link);
+  background: var(--surface);
   display: inline-flex;
   align-items: center;
   gap: .3rem;
@@ -350,8 +369,8 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   cursor: pointer;
 }
 .tool:hover {
-  background: rgba(232,168,0,.18);
-  border-color: var(--gold);
+  background: var(--hover);
+  border-color: var(--link);
 }
 
 /* Category chips: full color at rest, brighter on active */
@@ -426,16 +445,16 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .key-numbers {
   display: flex;
   flex-wrap: wrap;
-  margin: .6rem 0 .4rem;
-  border: 1px solid rgba(255,199,38,.18);
+  margin: .8rem 0 .5rem;
+  border: 1px solid var(--hair2);
   border-radius: 6px;
   overflow: hidden;
-  background: rgba(255,255,255,.045);
+  background: var(--surface);
 }
 .kn-card {
   flex: 1 1 0;
   min-width: 130px;
-  border-left: 1px solid rgba(255,255,255,.08);
+  border-left: 1px solid var(--hair);
   padding: .55rem .85rem .5rem;
 }
 .kn-card:first-child { border-left: none }
@@ -443,7 +462,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   font-family: var(--fd);
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--gold2);
+  color: var(--ink);
   letter-spacing: -.03em;
   line-height: 1;
   margin-bottom: .2rem;
@@ -451,7 +470,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .kn-lbl {
   font-family: var(--fn);
   font-size: .62rem;
-  color: rgba(255,255,255,.45);
+  color: var(--ink3);
   line-height: 1.35;
 }
 @media (max-width: 720px) {
@@ -507,8 +526,8 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .filter-toggle-btn:hover { background: var(--navy3) }
 .filter-toggle-btn.active { background: var(--gold); color: var(--navy) }
 
-.kn-card-gold { background: rgba(255,199,38,.08) }
-.kn-val-gold { color: var(--gold2) }
+.kn-card-gold { background: var(--golddim) }
+.kn-val-gold { color: var(--gold) }
 
 /* yr-chips-mobile and its label: desktop hidden, mobile only */
 #yr-chips-mobile { display: none }
@@ -519,46 +538,8 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
   .ctrl-row-2 .ctrl-filter-lbl:first-child { display: block }
 }
 
-/* ── MASTHEAD ACTION BUTTONS ── */
-.mast-actions {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  flex-wrap: wrap;
-  margin-top: 1.1rem;
-  margin-bottom: .6rem;
-}
-.mast-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  font-family: var(--fn);
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .04em;
-  color: var(--navy-dark, #020b1f);
-  background: var(--gold2, #ffc726);
-  border: none;
-  border-radius: 100px;
-  padding: 5px 14px;
-  cursor: pointer;
-  transition: opacity .15s;
-  white-space: nowrap;
-  text-decoration: none;
-}
-.mast-btn:hover { opacity: .85 }
-.mast-claude {
-  background: rgba(255,255,255,.1);
-  color: rgba(255,255,255,.5);
-  font-size: .62rem;
-  letter-spacing: .06em;
-  cursor: default;
-  border: 1px solid rgba(255,255,255,.12);
-}
-.mast-claude:hover { opacity: 1 }
-
-
-.mast-title em, .mast-title i { color: #fff !important; font-style: italic }
+/* Masthead action links live in .byline now (see hero CSS) */
+.byline svg { opacity:.85 }
 
 /* ════════════════════════════════
    COMPREHENSIVE MOBILE OPTIMISATION
@@ -649,9 +630,9 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 .chip.tech.on { background:var(--c-tech); border-color:var(--c-tech); color:#fff !important; outline:2px solid rgba(184,98,0,.5);   outline-offset:2px }
 
 
-.kn-source { font-family:var(--fm); font-size:.55rem; color:rgba(255,255,255,.28); margin:.4rem 0 0; letter-spacing:.04em }
-.kn-source a { color:rgba(255,255,255,.28); text-decoration:none; transition:color .15s }
-.kn-source a:hover { color:var(--gold2) }
+.kn-source { font-family:var(--fm); font-size:.55rem; color:var(--ink3); margin:.4rem 0 0; letter-spacing:.04em }
+.kn-source a { color:var(--link); text-decoration:none; transition:color .15s }
+.kn-source a:hover { color:var(--gold) }
 
 @media (max-width: 720px) {
 
@@ -689,21 +670,12 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
     <span class="mast-eyebrow">CSIS Beyond Parallel<span id="upd-top"></span></span>
     <h1 class="mast-title">Timeline of North Korea–Russia <em>Cooperation Since 2022</em></h1>
     <p class="mast-sub">Tracking every verified development in the deepening North Korea–Russia partnership — arms transfers, troop deployments, diplomatic summits, and technology exchanges. <span id="mast-total">Events</span> since July 2022.</p>
-    <div class="mast-actions">
-      <!-- Social share button -->
-      <button class="mast-btn" id="mast-social-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        Share on social
-      </button>
-
-      <button class="mast-btn" id="mast-cite-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        Cite database
-      </button>
-      <span class="mast-btn mast-claude">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
-        Built with Claude
-      </span>
+    <div class="byline">
+      <span class="b-static">By Victor Cha and Andy Lim</span><span class="b-sep">·</span>
+      <button class="linkbtn" id="mast-social-btn">Share</button><span class="b-sep">·</span>
+      <button class="linkbtn" id="mast-cite-btn">Cite database</button><span class="b-sep">·</span>
+      <span class="b-static">Built with Claude</span><span class="b-sep">·</span>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">&#9790; Dark</button>
     </div>
     <div class="mast-stats">
       <div class="mst"><span class="mst-n total" id="hdr-n">–</span><span class="mst-l">Total</span></div>
@@ -816,7 +788,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 
 <div class="page">
   <aside class="sidebar">
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:#aab0bc;margin-bottom:.6rem">Jump to year</div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);margin-bottom:.6rem">Jump to year</div>
 
   <div id="sb-years"></div>
 
@@ -825,31 +797,31 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
       <button onclick="sbCat('military',this)" data-cat="military"
         style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:4px;padding:6px 10px;border-radius:6px;border:none;background:#b83228;cursor:pointer;transition:opacity .15s"
         onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-        <span style="font-family:'Source Sans 3',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Military</span>
+        <span style="font-family:'Inter',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Military</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:700;color:#fff" id="sb-mil">–</span>
       </button>
       <button onclick="sbCat('intelligence',this)" data-cat="intelligence"
         style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:4px;padding:6px 10px;border-radius:6px;border:none;background:#1a5f8a;cursor:pointer;transition:opacity .15s"
         onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-        <span style="font-family:'Source Sans 3',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Intelligence</span>
+        <span style="font-family:'Inter',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Intelligence</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:700;color:#fff" id="sb-int">–</span>
       </button>
       <button onclick="sbCat('diplomatic',this)" data-cat="diplomatic"
         style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:4px;padding:6px 10px;border-radius:6px;border:none;background:#7a2f8a;cursor:pointer;transition:opacity .15s"
         onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-        <span style="font-family:'Source Sans 3',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Diplomatic</span>
+        <span style="font-family:'Inter',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Diplomatic</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:700;color:#fff" id="sb-dip">–</span>
       </button>
       <button onclick="sbCat('economic',this)" data-cat="economic"
         style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:4px;padding:6px 10px;border-radius:6px;border:none;background:#3a7a10;cursor:pointer;transition:opacity .15s"
         onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-        <span style="font-family:'Source Sans 3',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Economic</span>
+        <span style="font-family:'Inter',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Economic</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:700;color:#fff" id="sb-eco">–</span>
       </button>
       <button onclick="sbCat('technology',this)" data-cat="technology"
         style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:4px;padding:6px 10px;border-radius:6px;border:none;background:#b86200;cursor:pointer;transition:opacity .15s"
         onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-        <span style="font-family:'Source Sans 3',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Technology</span>
+        <span style="font-family:'Inter',Arial,sans-serif;font-size:.78rem;font-weight:600;color:#fff">Technology</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:700;color:#fff" id="sb-tech">–</span>
       </button>
     </div>
@@ -900,6 +872,7 @@ mark { background:rgba(232,168,0,.22); color:var(--navy); border-radius:2px; pad
 
 
 <div class="toast" id="toast"></div>
+<button class="totop no-print" id="totop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" onerror="console.warn('Chart.js CDN unavailable')"></script>
 <script>
@@ -938,7 +911,7 @@ function buildTimeline(){
   var maxEvt = 0;
   years.forEach(function(y){ if(YEAR_DATA[y]&&YEAR_DATA[y].total>maxEvt) maxEvt=YEAR_DATA[y].total; });
   var MAXH = 70;
-  var CAT_COLORS = {military:'rgba(184,50,40,.9)',intelligence:'rgba(26,95,138,.9)',diplomatic:'rgba(122,47,138,.9)',economic:'rgba(58,122,16,.9)',technology:'rgba(12,112,128,.9)'};
+  var CAT_COLORS = {military:cssVar('--c-mil'),intelligence:cssVar('--c-int'),diplomatic:cssVar('--c-dip'),economic:cssVar('--c-eco'),technology:cssVar('--c-tech')};
 
   years.forEach(function(yr){
     var d = YEAR_DATA[yr]||{total:0,mil:0,int:0,dip:0,eco:0,tech:0,landmarks:[]};
@@ -998,10 +971,25 @@ function buildTimeline(){
 
 /* ── CHART ── */
 var escChart=null;
+/* Read a CSS custom property (resolves per current theme) */
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+/* Chart colors derived from the active theme tokens */
+function chartTheme(){
+  var dark = document.documentElement.getAttribute('data-theme')==='dark';
+  return {
+    ink: cssVar('--ink2') || (dark?'#bab6a8':'#57544b'),
+    tick: dark?'rgba(242,239,229,.45)':'rgba(27,26,21,.45)',
+    grid: dark?'rgba(242,239,229,.08)':'rgba(27,26,21,.08)',
+    gold: cssVar('--gold') || '#bf9a2e',
+    tipBg: cssVar('--surface') || (dark?'#181814':'#fffefb'),
+    tipBorder: cssVar('--hair2') || (dark?'#35342e':'#dcd7c9')
+  };
+}
 function buildChart(){
   if(typeof Chart==='undefined') return;
   var ctx=document.getElementById('esc-chart'); if(!ctx) return;
   if(!EVENTS || !EVENTS.length) return;
+  var CT=chartTheme();
   try{
     /* Month axis generated from the actual date range in EVENTS */
     var minK=Infinity, maxK=-Infinity;
@@ -1012,11 +1000,11 @@ function buildChart(){
       labels.push(y+'-'+(m<10?'0':'')+m);
     }
     var SERIES=[
-      ['military','Military','rgba(184,50,40,.85)'],
-      ['intelligence','Intelligence','rgba(26,95,138,.85)'],
-      ['diplomatic','Diplomatic','rgba(122,47,138,.85)'],
-      ['economic','Economic','rgba(58,122,16,.85)'],
-      ['technology','Technology','rgba(12,112,128,.85)']
+      ['military','Military',cssVar('--c-mil')],
+      ['intelligence','Intelligence',cssVar('--c-int')],
+      ['diplomatic','Diplomatic',cssVar('--c-dip')],
+      ['economic','Economic',cssVar('--c-eco')],
+      ['technology','Technology',cssVar('--c-tech')]
     ];
     var counts={};
     SERIES.forEach(function(s){counts[s[0]]=labels.map(function(){return 0;});});
@@ -1033,20 +1021,20 @@ function buildChart(){
       options:{responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},tooltip:{
           mode:'index',intersect:false,
-          backgroundColor:'rgba(2,11,31,.95)',
-          titleColor:'#ffc726',
+          backgroundColor:CT.tipBg,
+          titleColor:CT.gold,
           titleFont:{family:'IBM Plex Mono',size:10,weight:'600'},
-          bodyColor:'rgba(255,255,255,.85)',
-          bodyFont:{family:'Source Sans 3',size:11},
-          borderColor:'rgba(255,199,38,.3)',
+          bodyColor:CT.ink,
+          bodyFont:{family:'Inter',size:11},
+          borderColor:CT.tipBorder,
           borderWidth:1,
           padding:10,
           cornerRadius:6,
           boxPadding:4
         }},
         scales:{
-          x:{stacked:true,grid:{display:false},border:{display:false},ticks:{font:{family:'IBM Plex Mono',size:9},color:'rgba(255,255,255,.3)',maxRotation:0,autoSkip:true,maxTicksLimit:10}},
-          y:{stacked:true,grid:{color:'rgba(255,255,255,.06)',drawTicks:false},border:{display:false},ticks:{font:{family:'IBM Plex Mono',size:9},color:'rgba(255,255,255,.3)',maxTicksLimit:4,padding:6}}
+          x:{stacked:true,grid:{display:false},border:{display:false},ticks:{font:{family:'IBM Plex Mono',size:9},color:CT.tick,maxRotation:0,autoSkip:true,maxTicksLimit:10}},
+          y:{stacked:true,grid:{color:CT.grid,drawTicks:false},border:{display:false},ticks:{font:{family:'IBM Plex Mono',size:9},color:CT.tick,maxTicksLimit:4,padding:6}}
         },animation:{duration:700}}
     });
   }catch(ex){}
@@ -1517,11 +1505,9 @@ function updateCounts(evs) {
     Object.keys(ydAll).sort().forEach(function(y) {
       var a = document.createElement('a');
       a.href = '#yr-' + y;
+      a.className = 'sb-year';
       a.addEventListener('click', function(ev){ ev.preventDefault(); scrollToYr('yr-' + y); });
-      a.style.cssText = 'display:block;text-decoration:none;background:#003a5c;border-radius:8px;padding:.55rem .75rem .5rem;margin-bottom:.35rem;transition:opacity .15s';
-      a.onmouseover = function(){ this.style.opacity = '.8'; };
-      a.onmouseout  = function(){ this.style.opacity = '1'; };
-      a.innerHTML = '<div style="font-family:\'Libre Baskerville\',Georgia,serif;font-size:.95rem;font-weight:700;color:#fff;line-height:1">' + y + '</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:.62rem;color:#ffc726;margin-top:4px">' + ydAll[y].total + ' events</div>';
+      a.innerHTML = '<div class="sb-y">' + y + '</div><div class="sb-c">' + ydAll[y].total + ' events</div>';
       sy.appendChild(a);
     });
   }
@@ -1604,7 +1590,31 @@ function loadFromSheet() {
     });
 }
 
+/* ── THEME TOGGLE ── */
+function curTheme(){ return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light'; }
+function updateThemeBtn(){
+  var b=document.getElementById('themeToggle'); if(!b) return;
+  var d=curTheme()==='dark';
+  b.innerHTML=d?'☀ Light':'☾ Dark';
+  b.setAttribute('aria-pressed',d);
+}
+function toggleTheme(){
+  var n=curTheme()==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',n);
+  try{ localStorage.setItem('bp-theme',n); }catch(e){}
+  updateThemeBtn();
+  var tc=document.querySelector('meta[name="theme-color"]');
+  if(tc) tc.setAttribute('content', n==='dark'?'#121210':'#faf8f2');
+  try{ buildTimeline(); }catch(e){}
+  try{ if(typeof Chart!=='undefined') buildChart(); }catch(e){}
+}
+
+window.addEventListener('scroll',function(){
+  var t=document.getElementById('totop'); if(t) t.classList.toggle('on',window.scrollY>500);
+},{passive:true});
+
 addEventListener('DOMContentLoaded',function(){
+  updateThemeBtn();
   loadFromSheet();
   /* Retry after 3s if categories wrong (GROUP_TAG undefined during first parse) */
   setTimeout(function(){
@@ -1672,19 +1682,19 @@ window.scrollToYr = function(id){
 
 <div id="social-dropdown" style="display:none;position:fixed;z-index:9999;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.18);padding:.5rem;min-width:180px">
   <a id="sd-x" href="#" target="_blank" rel="noopener"
-     style="display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:6px;text-decoration:none;color:#1a1e2a;font-family:'Source Sans 3',sans-serif;font-size:.82rem;font-weight:500;transition:background .12s"
+     style="display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:6px;text-decoration:none;color:#1a1e2a;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;transition:background .12s"
      onmouseover="this.style.background='#f0ece2'" onmouseout="this.style.background='none'">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
     Share on X
   </a>
   <a id="sd-bsky" href="#" target="_blank" rel="noopener"
-     style="display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:6px;text-decoration:none;color:#1a1e2a;font-family:'Source Sans 3',sans-serif;font-size:.82rem;font-weight:500;transition:background .12s"
+     style="display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:6px;text-decoration:none;color:#1a1e2a;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;transition:background .12s"
      onmouseover="this.style.background='#f0ece2'" onmouseout="this.style.background='none'">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.204-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg>
     Share on Bluesky
   </a>
   <a id="sd-li" href="#" target="_blank" rel="noopener"
-     style="display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:6px;text-decoration:none;color:#1a1e2a;font-family:'Source Sans 3',sans-serif;font-size:.82rem;font-weight:500;transition:background .12s"
+     style="display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:6px;text-decoration:none;color:#1a1e2a;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;transition:background .12s"
      onmouseover="this.style.background='#f0ece2'" onmouseout="this.style.background='none'">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
     Share on LinkedIn
@@ -1730,7 +1740,7 @@ window.scrollToYr = function(id){
     <circle cx="12" cy="12" r="10" stroke-opacity=".25"/>
     <path d="M12 2a10 10 0 0 1 10 10" stroke="#ffc726"/>
   </svg>
-  <span style="font-family:'Source Sans 3',sans-serif;font-size:.8rem;color:rgba(255,255,255,.6);letter-spacing:.08em">Loading latest events&hellip;</span>
+  <span style="font-family:'Inter',sans-serif;font-size:.8rem;color:rgba(255,255,255,.6);letter-spacing:.08em">Loading latest events&hellip;</span>
 </div>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 
