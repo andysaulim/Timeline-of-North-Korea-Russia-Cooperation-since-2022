@@ -1554,7 +1554,51 @@ function updateCounts(evs) {
       fc.appendChild(btn);
     });
   }
+  /* Publish the live count so any embedding/landing page can bind to it
+     instead of hardcoding a number that goes stale. Fires on every load
+     (Google Sheet or static fallback). */
+  broadcastStats(counts, updMY, years);
 }
+
+/* ── Live-stats broadcaster ──
+   The timeline is the single source of truth for the event count. When it is
+   embedded in an iframe (e.g. the CSIS Beyond Parallel landing page), the host
+   page cannot read the count out of the cross-origin frame, so instead we push
+   it out via postMessage. The host binds its "N verified events" text to this
+   feed and never falls out of sync again. The same payload is also exposed on
+   window.__nkruTimelineStats and dispatched as a same-document CustomEvent for
+   hosts that include the timeline inline rather than in a frame. */
+function broadcastStats(counts, updMY, years) {
+  var stats = {
+    type: 'nkru-timeline:stats',
+    total: counts.n,
+    military: counts.mil,
+    intelligence: counts.int,
+    diplomatic: counts.dip,
+    economic: counts.eco,
+    technology: counts.tech,
+    updated: updMY || '',
+    years: years || [],
+    yearsTracked: (years || []).length
+  };
+  window.__nkruTimelineStats = stats;
+  try {
+    window.dispatchEvent(new CustomEvent('nkru-timeline:stats', { detail: stats }));
+  } catch (e) {}
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(stats, '*');
+    }
+  } catch (e) {}
+}
+
+/* Late-joining hosts (script/frame that starts listening after the timeline has
+   already loaded) can request the current stats and get an immediate reply. */
+window.addEventListener('message', function (ev) {
+  if (ev && ev.data === 'nkru-timeline:request-stats' && window.__nkruTimelineStats) {
+    try { (ev.source || window.parent).postMessage(window.__nkruTimelineStats, '*'); } catch (e) {}
+  }
+});
 
 /* ── Loading overlay ── */
 function showLoading() {

@@ -108,6 +108,60 @@ This project is a single self-contained HTML file (`index.html`). No build tools
 
 ---
 
+## Live event count for embedding / landing pages
+
+The timeline is the **single source of truth** for the event count — it derives
+every stat from the live event data on each load. Any page that embeds the
+timeline (for example the Beyond Parallel landing page, which frames it via the
+**Embed timeline** code) should bind its "N verified events" text to that live
+count instead of hardcoding a number, otherwise the landing figure drifts out
+of sync every time an event is added to the sheet.
+
+The timeline broadcasts its live stats to the host page via `postMessage`.
+Drop this snippet into the host/landing page:
+
+```html
+<script>
+  // Bind the landing-page count to the timeline's live event count.
+  window.addEventListener('message', function (ev) {
+    // Only trust messages coming from the timeline's own origin.
+    if (ev.origin !== 'https://andysaulim.github.io') return;
+    var s = ev.data;
+    if (!s || s.type !== 'nkru-timeline:stats') return;
+
+    // Update every element tagged with data-timeline-stat.
+    // e.g. <span data-timeline-stat="total">323</span> verified events
+    document.querySelectorAll('[data-timeline-stat]').forEach(function (el) {
+      var key = el.getAttribute('data-timeline-stat'); // total, military, updated, yearsTracked, ...
+      if (s[key] != null) el.textContent = s[key];
+    });
+  });
+
+  // In case the timeline finished loading before this listener attached,
+  // ask it to resend once the frame is ready.
+  window.addEventListener('load', function () {
+    var frame = document.querySelector('iframe[src*="Timeline-of-North-Korea-Russia"]');
+    if (frame) frame.contentWindow.postMessage('nkru-timeline:request-stats', '*');
+  });
+</script>
+```
+
+The broadcast payload (`window.__nkruTimelineStats`, also dispatched as the
+same-document `nkru-timeline:stats` CustomEvent) looks like:
+
+```js
+{
+  type: 'nkru-timeline:stats',
+  total: 325,          // live event count — bind "N verified events" here
+  military: 125, intelligence: 68, diplomatic: 54, economic: 57, technology: 21,
+  updated: 'July 2026',
+  years: ['2022','2023','2024','2025','2026'],
+  yearsTracked: 5
+}
+```
+
+---
+
 ## Citation
 
 **Chicago:**
